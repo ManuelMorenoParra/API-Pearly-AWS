@@ -9,14 +9,17 @@ object ConexionDB {
 
     private const val HOST = "pearly.cch8km4gcrmo.us-east-1.rds.amazonaws.com"
     private const val PORT = 3306
-    private const val DATABASE = "pearly"
+    private const val DATABASE = "proyecto"
     private const val USER = "Administrator"
     private const val PASSWORD = "PI2026dam"
 
     private const val SSL_CERT_PATH = "src/main/resources/global-bundle.pem"
 
     private val URL =
-        "jdbc:mysql://$HOST:$PORT/$DATABASE?useSSL=true&verifyServerCertificate=true&serverTimezone=Europe/Madrid"
+        "jdbc:mysql://$HOST:$PORT/$DATABASE" +
+                "?sslMode=VERIFY_CA" +
+                "&sslCa=C:/Users/manmorpar/Documents/API-Pearly-AWS/src/main/resources/global-bundle.pem" +
+                "&serverTimezone=Europe/Madrid"
 
     lateinit var db: Database
 
