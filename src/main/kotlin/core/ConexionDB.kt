@@ -1,5 +1,13 @@
 package edu.gva.es.core
 
+import data.Mensajes
+import data.Progreso
+import data.Publicaciones
+import data.Retos
+import edu.gva.es.data.Comentarios
+import edu.gva.es.data.Likes
+import edu.gva.es.data.Seguidores
+import edu.gva.es.data.Soporte
 import edu.gva.es.data.Usuarios
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -33,7 +41,17 @@ object ConexionDB {
             println("Conexión establecida con éxito")
 
             transaction(db) {
-                SchemaUtils.create(Usuarios)
+                SchemaUtils.create(
+                    Usuarios,
+                    Retos,
+                    Publicaciones,
+                    Progreso,
+                    Comentarios,
+                    Mensajes,
+                    Soporte,
+                    Seguidores,
+                    Likes
+                )
                 println("Esquema de la tabla 'Usuarios' verificado/creado.")
             }
 
