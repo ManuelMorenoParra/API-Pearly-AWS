@@ -1,6 +1,3 @@
-val kotlin_version: String by project
-val logback_version: String by project
-
 plugins {
     kotlin("jvm") version "2.2.21"
     id("io.ktor.plugin") version "3.3.2"
@@ -12,6 +9,18 @@ version = "0.0.1"
 
 application {
     mainClass.set("edu.gva.es.ApplicationKt")
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(23))
+    }
+}
+
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions {
+        jvmTarget.set(org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_23)
+    }
 }
 
 dependencies {
@@ -33,5 +42,3 @@ dependencies {
 
     implementation("mysql:mysql-connector-java:8.0.29")
 }
-
-

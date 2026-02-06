@@ -1,5 +1,13 @@
 package edu.gva.es.core
 
+import data.Mensajes
+import data.Progreso
+import data.Publicaciones
+import data.Retos
+import edu.gva.es.data.Comentarios
+import edu.gva.es.data.Likes
+import edu.gva.es.data.Seguidores
+import edu.gva.es.data.Soporte
 import edu.gva.es.data.Usuarios
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -7,14 +15,18 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 object ConexionDB {
 
-    private const val HOST = "192.168.3.128"
+    private const val HOST = "pearly.cch8km4gcrmo.us-east-1.rds.amazonaws.com"
     private const val PORT = 3306
     private const val DATABASE = "proyecto"
-    private const val USER = "dam"
-    private const val PASSWORD = "Dam2526"
+    private const val USER = "Administrator"
+    private const val PASSWORD = "PI2026dam"
 
     private val URL =
-        "jdbc:mysql://$HOST:$PORT/$DATABASE?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Europe/Madrid"
+        "jdbc:mysql://$HOST:$PORT/$DATABASE" +
+                "?useSSL=false" +
+                "&allowPublicKeyRetrieval=true" +
+                "&serverTimezone=Europe/Madrid"
+
 
     lateinit var db: Database
 
@@ -29,7 +41,17 @@ object ConexionDB {
             println("Conexión establecida con éxito")
 
             transaction(db) {
-                SchemaUtils.create(Usuarios)
+                SchemaUtils.create(
+                    Usuarios,
+                    Retos,
+                    Publicaciones,
+                    Progreso,
+                    Comentarios,
+                    Mensajes,
+                    Soporte,
+                    Seguidores,
+                    Likes
+                )
                 println("Esquema de la tabla 'Usuarios' verificado/creado.")
             }
 
