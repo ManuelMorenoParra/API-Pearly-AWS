@@ -1,11 +1,11 @@
-package edu.gva.es.domain
+package domain
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class SeguidorDTO(
+data class BloqueoDTO(
     val id: Int? = null,
-    val idUsuario: Int = 0,
-    val idSeguido: Int = 0,
+    val idBloqueador: Int,
+    val idBloqueado: Int,
     val fecha: String? = null
 )

@@ -16,16 +16,25 @@ object SeguidoresDAO {
         }
     }
 
-    fun dejarDeSeguir(idUsuario: Int, idSeguido: Int) = transaction {
+    fun dejarDeSeguir(idUsuario: Int, idSeguido: Int): Int = transaction {
         Seguidores.deleteWhere {
             (Seguidores.idUsuario eq idUsuario) and
                     (Seguidores.idSeguido eq idSeguido)
         }
     }
 
-    fun obtenerSeguidores(idUsuario: Int) = transaction {
+    // Añadimos el tipo de retorno explícito para evitar errores de inferencia
+    fun obtenerSeguidores(idUsuario: Int): List<Int> = transaction {
         Seguidores.selectAll()
             .where { Seguidores.idSeguido eq idUsuario }
-            .map { it[Seguidores.idUsuario] }
+            .map { it[Seguidores.idUsuario] as Int }
+    }
+
+    fun actualizar(idSeguimiento: Int, dto: SeguidorDTO): Boolean = transaction {
+        Seguidores.update({ Seguidores.id eq idSeguimiento }) {
+            it[idUsuario] = dto.idUsuario
+            it[idSeguido] = dto.idSeguido
+            it[fecha] = LocalDateTime.now() // Actualizamos la fecha al momento del cambio
+        } > 0
     }
 }

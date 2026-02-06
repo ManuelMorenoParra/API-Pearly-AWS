@@ -12,7 +12,7 @@ fun Route.progresoRouting() {
 
     val service = ProgresoService()
 
-    route("/progreso") {
+    route("/progresos") {
 
         get("{idUsuario}") {
             val id = call.parameters["idUsuario"]?.toIntOrNull()
@@ -31,15 +31,9 @@ fun Route.progresoRouting() {
                 val id = service.registrarProgreso(progreso)
                 call.respond(HttpStatusCode.Created, mapOf("id" to id))
             } catch (e: Exception) {
+                // Esto te imprimirá el error real en la consola de IntelliJ
                 println("Error en POST /progreso: ${e.message}")
-
-                // Si el mensaje es el de duplicado, enviamos un 409 (Conflict)
-                if (e.message == "Este reto ya fue completado por el usuario") {
-                    call.respond(HttpStatusCode.Conflict, e.message!!)
-                } else {
-                    // Para cualquier otro error (como si se cae la BD), enviamos 500
-                    call.respond(HttpStatusCode.InternalServerError, e.message ?: "Error desconocido")
-                }
+                call.respond(HttpStatusCode.InternalServerError, e.message ?: "Error desconocido")
             }
         }
 
@@ -53,6 +47,50 @@ fun Route.progresoRouting() {
 
             val puntos = service.obtenerPuntosTotales(id)
             call.respond(mapOf("puntosTotales" to puntos))
+        }
+
+        put("/{id}") {
+            val id = call.parameters["id"]?.toIntOrNull()
+            if (id == null) {
+                call.respond(HttpStatusCode.BadRequest, "ID de progreso no válido")
+                return@put
+            }
+
+            try {
+                val dto = call.receive<ProgresoDTO>()
+                val exito = service.editarProgreso(id, dto)
+
+                if (exito) {
+                    call.respond(HttpStatusCode.OK, "Progreso actualizado correctamente")
+                } else {
+                    call.respond(HttpStatusCode.NotFound, "No se encontró el progreso con ID $id")
+                }
+            } catch (e: Exception) {
+                call.respond(HttpStatusCode.InternalServerError, "Error al actualizar: ${e.message}")
+            }
+        }
+
+        delete("/{id}") {
+            val id = call.parameters["id"]?.toIntOrNull()
+
+            if (id == null) {
+                call.respond(HttpStatusCode.BadRequest, "ID de progreso inválido")
+                return@delete
+            }
+
+            try {
+                // Asegúrate de que tu ProgresoService tenga una función delete(id: Int)
+                val eliminado = service.eliminarProgreso(id)
+
+                if (eliminado) {
+                    call.respond(HttpStatusCode.OK, "Progreso eliminado correctamente")
+                } else {
+                    call.respond(HttpStatusCode.NotFound, "No se encontró el progreso con ID $id")
+                }
+            } catch (e: Exception) {
+                println("Error al eliminar progreso: ${e.message}")
+                call.respond(HttpStatusCode.InternalServerError, "Error en el servidor: ${e.message}")
+            }
         }
     }
 }
