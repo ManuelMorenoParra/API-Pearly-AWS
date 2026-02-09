@@ -4,10 +4,11 @@ import data.Mensajes
 import data.Progreso
 import data.Publicaciones
 import data.Retos
+import edu.gva.es.data.Bloqueos
 import edu.gva.es.data.Comentarios
 import edu.gva.es.data.Likes
 import edu.gva.es.data.Seguidores
-import edu.gva.es.data.Soporte
+import edu.gva.es.data.Soportes
 import edu.gva.es.data.Usuarios
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.SchemaUtils
@@ -43,12 +44,13 @@ object ConexionDB {
             transaction(db) {
                 SchemaUtils.create(
                     Usuarios,
+                    Bloqueos,
                     Retos,
                     Publicaciones,
                     Progreso,
                     Comentarios,
                     Mensajes,
-                    Soporte,
+                    Soportes,
                     Seguidores,
                     Likes
                 )
